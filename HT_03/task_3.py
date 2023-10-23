@@ -4,6 +4,8 @@ Write a script to concatenate following dictionaries to create a new one.
     dict_2 = {'dou': 'jones', 'USD': 36}
     dict_3 = {'AUD': 19.2, 'name': 'Tom'}
 '''
+# можна простіше. Гугли як об'єднати словники в один. І це я вже мовчу про те що temp_list у тебе зовсім не ліст %)
+# Перероблено
 
 dict_1 = {'foo': 'bar', 'bar': 'buz'}
 dict_2 = {'dou': 'jones', 'USD': 36}
