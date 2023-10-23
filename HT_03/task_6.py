@@ -20,7 +20,7 @@ words = []
 numbers = []
 iterable = []
 for i in values_dict.values():
-    if isinstance(i, int) or isinstance(i, float):
+    if isinstance(i, (int, float)):
         numbers.append(i)
     elif isinstance(i, str):
         words.append(i)
