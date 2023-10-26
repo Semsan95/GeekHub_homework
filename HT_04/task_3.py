@@ -10,7 +10,7 @@ class InvalidAgeError(Exception):
 
 try:
     age = int(input('Enter age over 18: '))
-    if age not in range(18, 121):
+    if not 17 < age < 121:
         raise InvalidAgeError('Age is not appropriate.')
 except InvalidAgeError as e:
     print('AgeError:', e)
