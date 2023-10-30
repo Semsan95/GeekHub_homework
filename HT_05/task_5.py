@@ -20,7 +20,7 @@ def calc():
             return num1 * num2
         elif operator == '**':
             return num1 ** num2
-        elif operator == '/':
+        elif operator == '/' or operator == ':':
             return num1 / num2
         elif operator == '%':
             return num1 % num2
