@@ -21,5 +21,4 @@ def cat_paws(long_string):
     else:
         print(f'Кількість унікальних символів: {len(set(long_string))}')
 
-
 cat_paws("f98neroi4nr0c3n30irn03ien3c0rfe  kdno400wenwkowe00koijn35pijnp46ij7k5j78p3kj546p4 65jnpoj35po6j345")
