@@ -4,7 +4,8 @@
 У випадку некоректного введеного значення - виводити відповідне повідомлення.
 '''
 
-def season(month):
+def season():
+    month = int(input('Enter number between 1 and 12: '))
     if month in [1, 2, 12]:
         return 'Winter'
     elif month in [3, 4, 5]:
@@ -16,4 +17,4 @@ def season(month):
     else:
         raise ValueError('Enter value between 1 and 12')
 
-print(season(1))
+print(season())

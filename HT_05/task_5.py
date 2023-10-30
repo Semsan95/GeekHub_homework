@@ -6,22 +6,32 @@
 Не забудьте протестувати з різними значеннями на предмет помилок!
 '''
 
-def cal(num1: int, operator: str, num2: int):
-    if operator == '+':
-        return num1 + num2
-    elif operator == '-':
-        return num1 - num2
-    elif operator == '*':
-        return num1 * num2
-    elif operator == '**':
-        return num1 ** num2
-    elif operator == '/' and num2 != 0:
-        return num1 / num2
-    elif operator == '%' and num2 != 0:
-        return num1 % num2
-    elif operator == '//' and num2 != 0:
-        return num1 // num2
-    else:
-        return 'Невірний ввід даних. Повторіть.'
+def calc():
+    try:
+        num1, operator, num2 = input('Введіть бажану операцію: ').split()
+        num1 = float(num1)
+        num2 = float(num2)
 
-print(cal(1, '+', 0))
+        if operator == '+':
+            return num1 + num2
+        elif operator == '-':
+            return num1 - num2
+        elif operator == '*':
+            return num1 * num2
+        elif operator == '**':
+            return num1 ** num2
+        elif operator == '/':
+            return num1 / num2
+        elif operator == '%':
+            return num1 % num2
+        elif operator == '//':
+            return num1 // num2
+        else:
+            return 'Ви ввели неіснуючу операцію.'
+    except ZeroDivisionError:
+        return 'На нуль ділити не можна.'
+    except ValueError:
+        return 'Ви ввели не число.'
+
+
+print(calc())

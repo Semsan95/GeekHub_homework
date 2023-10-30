@@ -8,7 +8,9 @@
     x == y.      вiдповiдь - "х дорiвнює y"
 '''
 
-def equalizer(x, y):
+def equalizer():
+    x = float(input('Введіть перше число: '))
+    y = float(input('Введіть друге число: '))
     if x > y:
         z = x - y
         return f"{x} бiльше нiж {y}, на {z}"
@@ -18,4 +20,4 @@ def equalizer(x, y):
     else:
         return f"{x} дорiвнює {y}"
 
-print(equalizer(29, 28))
+print(equalizer())
