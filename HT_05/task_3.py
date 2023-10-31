@@ -7,10 +7,17 @@
     x < y;       вiдповiдь - "у бiльше нiж х на z"
     x == y.      вiдповiдь - "х дорiвнює y"
 '''
+def user_input():
+    try:
+        x = float(input('Введіть перше число: '))
+        y = float(input('Введіть друге число: '))
+        return x, y
+    except ValueError:
+        raise ValueError('Введіть цифру.')
+
 
 def equalizer():
-    x = float(input('Введіть перше число: '))
-    y = float(input('Введіть друге число: '))
+    x, y = user_input()
     if x > y:
         z = x - y
         return f"{x} бiльше нiж {y}, на {z}"

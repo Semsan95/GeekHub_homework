@@ -4,8 +4,17 @@
 У випадку некоректного введеного значення - виводити відповідне повідомлення.
 '''
 
+def user_input():
+    while True:
+        try:
+            month = int(input('Enter number between 1 and 12: '))
+            return month
+        except ValueError as e:
+            print(f'Error: {e} Please enter integer value.')
+
+
 def season():
-    month = int(input('Enter number between 1 and 12: '))
+    month = user_input()
     if month in [1, 2, 12]:
         return 'Winter'
     elif month in [3, 4, 5]:
