@@ -6,37 +6,36 @@
 Не забудьте протестувати з різними значеннями на предмет помилок!
 '''
 
-def user_input():
-    while True:
+def user_input(num1, num2):
         try:
-            num1, operator, num2 = input('Введіть бажану операцію: ').split()
-            num1 = float(num1)
-            num2 = float(num2)
-            return num1, operator, num2
-        except ValueError as e:
-            print(f'Помилка: {e}. Не вірний формат вводу.')
+            x = float(num1)
+            y = float(num2)
+            return x, y
+        except ValueError:
+            raise ValueError('Не вірний формат вводу.')
 
-def calc():
+def calc(num1, num2, operator):
     try:
-        num1, operator, num2 = user_input()
+        x, y = user_input(num1, num2)
         if operator == '+':
-            return num1 + num2
+            return x + y
         elif operator == '-':
-            return num1 - num2
+            return x - y
         elif operator == '*':
-            return num1 * num2
+            return x * y
         elif operator == '**':
-            return num1 ** num2
+            return x ** y
         elif operator == '/' or operator == ':':
-            return num1 / num2
+            return x / y
         elif operator == '%':
-            return num1 % num2
+            return x % y
         elif operator == '//':
-            return num1 // num2
+            return x // y
         else:
             return 'Ви ввели неіснуючу операцію.'
     except ZeroDivisionError:
         return 'На нуль ділити не можна.'
 
+num1, operator, num2 = input('Введіть бажану операцію: ').split()
 
-print(calc())
+print(calc(num1, num2, operator))
