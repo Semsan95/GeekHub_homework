@@ -4,9 +4,7 @@
 
 
 def fibonacci(number):
-    x = 0
-    y = 1
-    z = 0
+    x, y, z = 0, 1, 0
     my_list = []
     while z < number:
         my_list.append(x)
