@@ -26,13 +26,10 @@ def morse_code(morse_str):
     }
 
     message = []
-    # morse_words = ['--. . . -.- .... ..- -...', '.. ...', '.... . .-. .'] - список з трьох слів
     morse_words = morse_str.split('   ')
 
     for morse_word in morse_words:
-        # letters_list на кожній ітерації = списку з букв одного слова
         letters_list = morse_word.split()
-        # word на кожній ітерації = списку зі слів перекладених за допомогою словника
         word = ''.join([morse_dict[morse_letter] for morse_letter in letters_list])
         message.append(word)
     return ' '.join(message)
