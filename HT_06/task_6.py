@@ -10,7 +10,12 @@
 
 
 def shift(user_list, steps):
+
+    if steps > len(user_list) or steps < 0:
+        steps = steps % len(user_list)
+
     shifted_list = user_list[-steps:] + user_list[:-steps]
+
     return shifted_list
 
 user_list = input('Введіть елементи через пробіл: ').split()
