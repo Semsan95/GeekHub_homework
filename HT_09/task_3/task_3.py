@@ -181,23 +181,26 @@ def start():
     print('Увійдіть у свій акаунт.')
     username = login()
     print(f'Вітаємо {username}!')
-    print('1. Перевірити баланс')
-    print('2. Внести кошти')
-    print('3. Зняти кошти')
-    print('4. Історія транзакцій')
-    print('5. Вийти')
     while True:
         balance = current_balance(username)
-        print('')
+        print('1. Перевірити баланс')
+        print('2. Внести кошти')
+        print('3. Зняти кошти')
+        print('4. Історія транзакцій')
+        print('5. Вийти')
         action = input('Будь ласка виберіть дію: ')
         if action == '1':
             show_balance(balance)
+            print('')
         elif action == '2':
             deposit(username, balance)
+            print('')
         elif action == '3':
             withdraw(username, balance)
+            print('')
         elif action == '4':
             history_load(username)
+            print('')
         elif action == '5':
             print('Бажаємо гарного дня!')
             return
