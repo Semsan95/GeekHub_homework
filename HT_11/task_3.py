@@ -7,6 +7,10 @@ import random
 
 class User:
 
+    def __init__(self):
+        pass
+
+
     @staticmethod
     def random_bonus():
         # З шансом 10% зараховує 50$ новому користувачу.
@@ -69,8 +73,8 @@ class User:
                     print('Користувача не існує або не правильний пароль.')
                     print(f'Спроб залишилось: {3 - count}')
 
-    @classmethod
-    def user_balance(cls, username):
+
+    def user_balance(self, username):
         """
             Повертаємо баланс юзера в флоат.
 
@@ -86,8 +90,8 @@ class User:
             balance = cursor.fetchone()[1]
             return balance
 
-    @classmethod
-    def show_balance(cls, balance):
+
+    def show_balance(self, balance):
         """
         Виводимо баланс на екран.
 
@@ -96,8 +100,8 @@ class User:
         """
         print(f'Ваш поточний баланс складає: {balance}$')
 
-    @classmethod
-    def input_check(cls, promt):
+
+    def input_check(self, promt):
         """
         Перевірка вводу користувача на від'ємні значення і коректність даних.
 
@@ -120,8 +124,8 @@ class User:
             except ValueError:
                 print('Введено некоректні дані.')
 
-    @classmethod
-    def deposit(cls, username, balance):
+
+    def deposit(self, username, balance):
         """
         Просимо суму і вносимо її на рахунок. Повертаємо результат операції.
 
@@ -145,8 +149,8 @@ class User:
                 else:
                     print('Банкомат не приймає купюри менше 10.')
 
-    @classmethod
-    def withdraw(cls, username, balance):
+
+    def withdraw(self, username, balance):
         """
         Просимо суму і знімаємо її з рахунку. Повертаємо результат операції.
 
@@ -174,8 +178,8 @@ class User:
                     else:
                         print(f'Нажаль наш банк не дає кредити ;)')
 
-    @classmethod
-    def user_menu(cls, username):
+
+    def user_menu(self, username):
         while True:
             balance = User.user_balance(username)
             print('1. Перевірити баланс')
