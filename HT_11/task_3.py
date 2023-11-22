@@ -1,7 +1,3 @@
-'''
-Банкомат 2.0: переробіть программу з функціонального підходу програмування на використання класів.
-Додайте шанс 10% отримати бонус на баланс при створенні нового користувача.
-'''
 import sqlite3
 import random
 
@@ -9,7 +5,6 @@ class User:
 
     def __init__(self):
         pass
-
 
     @staticmethod
     def random_bonus():
@@ -73,7 +68,6 @@ class User:
                     print('Користувача не існує або не правильний пароль.')
                     print(f'Спроб залишилось: {3 - count}')
 
-
     def user_balance(self, username):
         """
             Повертаємо баланс юзера в флоат.
@@ -90,7 +84,6 @@ class User:
             balance = cursor.fetchone()[1]
             return balance
 
-
     def show_balance(self, balance):
         """
         Виводимо баланс на екран.
@@ -99,7 +92,6 @@ class User:
                 balance (float): Сума на рахунку користувача
         """
         print(f'Ваш поточний баланс складає: {balance}$')
-
 
     def input_check(self, promt):
         """
@@ -124,7 +116,6 @@ class User:
             except ValueError:
                 print('Введено некоректні дані.')
 
-
     def deposit(self, username, balance):
         """
         Просимо суму і вносимо її на рахунок. Повертаємо результат операції.
@@ -137,7 +128,7 @@ class User:
             cursor = conn.cursor()
             promt = 'Введіть суму яку хочете внести: '
             while True:
-                amount, change, _ = User.input_check(promt)
+                amount, change, _ = self.input_check(promt)
                 if amount >= 10:
                     balance += amount
                     cursor.execute('UPDATE users SET balance = ? WHERE username = ?', (balance, username))
@@ -148,7 +139,6 @@ class User:
                     break
                 else:
                     print('Банкомат не приймає купюри менше 10.')
-
 
     def withdraw(self, username, balance):
         """
@@ -163,7 +153,7 @@ class User:
         while True:
             with sqlite3.connect('atm_data.db') as conn:
                 cursor = conn.cursor()
-                _, _, amount = User.input_check(promt)
+                _, _, amount = self.input_check(promt)
                 if amount % 10 != 0:
                     print('Введіть число кратне 10.')
                 elif amount > bank_balance:
@@ -178,23 +168,22 @@ class User:
                     else:
                         print(f'Нажаль наш банк не дає кредити ;)')
 
-
     def user_menu(self, username):
         while True:
-            balance = User.user_balance(username)
+            balance = self.user_balance(username)
             print('1. Перевірити баланс')
             print('2. Внести кошти')
             print('3. Зняти кошти')
             print('4. Вийти')
             action = input('Будь ласка виберіть дію: ')
             if action == '1':
-                User.show_balance(balance)
+                self.show_balance(balance)
                 print('')
             elif action == '2':
-                User.deposit(username, balance)
+                self.deposit(username, balance)
                 print('')
             elif action == '3':
-                User.withdraw(username, balance)
+                self.withdraw(username, balance)
                 print('')
             elif action == '4':
                 print('Бажаємо гарного дня!')
@@ -228,13 +217,14 @@ class ATM:
     @staticmethod
     def atm_update():
         while True:
+            user_instance = User()
             nominal_promt = 'Введіть номінал купюри: '
-            *_, nominal = User.input_check(nominal_promt)
+            *_, nominal = user_instance.input_check(nominal_promt)
 
             nominals = [10, 20, 50, 100, 200, 500, 1000]
             if nominal in nominals:
                 amount_promt = 'Введіть наявну кількість купюр: '
-                *_, amount = User.input_check(amount_promt)
+                *_, amount = user_instance.input_check(amount_promt)
 
                 with sqlite3.connect('atm_data.db') as conn:
                     cursor = conn.cursor()
@@ -272,14 +262,15 @@ def start():
         print('3. Вийти')
         check = input('Будь ласка виберіть дію: ')
         if check == '1':
-            username = User.login()
+            user_instance = User()
+            username = user_instance.login()
             print('')
             print(f'Вітаємо {username}!')
             if username == 'admin':
                 ATM.admin_menu()
                 return
             else:
-                User.user_menu(username)
+                user_instance.user_menu(username)
                 return
         elif check == '2':
             User.new_user()
