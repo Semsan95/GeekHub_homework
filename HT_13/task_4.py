@@ -5,35 +5,40 @@ Create 'list'-like object, but index starts from 1 and index of 0 raises error.
 '''
 
 
-class NewList:
-
-    def __init__(self, *args):
-        self.elements = list(args)
+class CustomList(list):
 
     @staticmethod
-    def _zero_check(index):
+    def value_check(index):
         if index == 0:
-            raise IndexError('Індексація починається з 1')
+            raise IndexError
+        elif index is not None and index > 0:
+            return index - 1
+        else:
+            return index
 
     def __getitem__(self, index):
-        self._zero_check(index)
-        new_index = index % len(self.elements)
-        if index > 0:
-            return self.elements[new_index - 1]
+        if isinstance(index, slice):
+            # Handle slicing
+            start, stop, step = index.start, index.stop, index.step
+            start = self.value_check(start)
+            stop = self.value_check(stop)
+            return super().__getitem__(slice(start, stop, step))
         else:
-            return self.elements[new_index]
+            # Handle single integer index
+            if index == 0:
+                raise IndexError("Index starts from 1")
+            return super().__getitem__(index - 1 if index > 0 else index)
 
     def __setitem__(self, index, value):
-        self._zero_check(index)
-        self.elements[index - 1] = value
+        if index == 0:
+            raise IndexError("Index starts from 1")
+        super().__setitem__(index - 1, value)
 
     def __delitem__(self, index):
-        self._zero_check(index)
-        del self.elements[index - 1]
+        if index == 0:
+            raise IndexError("Index starts from 1")
+        super().__delitem__(index - 1)
 
-    def __repr__(self):
-        return repr(self.elements)
-
-my_list = NewList(1, 2, 3)
-print(my_list[-1])
+my_list = CustomList([1, 2, 3, 4])
+print(my_list[1:-1])
 
