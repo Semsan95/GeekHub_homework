@@ -9,39 +9,78 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def author_to_dict():
-    url_about = "https://quotes.toscrape.com" + section.find("a").get("href")
-    resp_about = requests.get(url_about)
-    soup_about = BeautifulSoup(resp_about.text, 'lxml')
+def author_to_dict(author, block):
+    url_about = "https://quotes.toscrape.com" + block.find("a").get("href")
+    response_about = requests.get(url_about)
+    soup_about = BeautifulSoup(response_about.text, 'lxml')
     born_date = soup_about.find("span", class_="author-born-date").text
     born_location = soup_about.find("span", class_="author-born-location").text
     born_text = ' '.join([born_date, born_location])
-    author_born[author] = born_text
+    return {author: born_text}
 
-def func2(data):
-    for section in data:
-        author = section.find("small", itemprop="author").text.replace("\n", "")
-        quote = section.find(itemprop="text").text
-        if author not in author_born:
-            author_to_dict()
-        writer.writerow([author, author_born[author], quote])
-        break
 
-def func1():
-    for page in range(1, 11):
-        response = requests.get(f'https://quotes.toscrape.com/page/{page}')
-        soup = BeautifulSoup(response.text, 'lxml')
-        data = soup.find_all("div", class_="quote")
-        result = func2(data)
-        return result
-
-def page_turner():
-    response = requests.get(f'https://quotes.toscrape.com/page/1')
-    soup = BeautifulSoup(response.text, 'lxml')
-    page_num = soup.find(class_="next").get("href")
-
-with open('authors.csv', 'w', encoding='utf-8', newline='') as csvfile:
-    writer = csv.writer(csvfile)
-    writer.writerow(['Name', 'Born', 'Quote'])
+def csv_writer(author, quote, writer, block):
     author_born = {}
-    func1()
+    if author not in author_born:
+        author_born.update(author_to_dict(author, block))
+    writer.writerow([author, author_born[author], quote])
+
+
+def get_author_and_quote(block):
+        author = block.find("small", itemprop="author").text.replace("\n", "")
+        quote = block.find("span", itemprop="text").text
+        return author, quote
+
+
+def get_quote_blocks(soup):
+    quote_blocks = soup.find_all("div", class_="quote")
+    return quote_blocks
+
+
+def next_page_check(soup):
+    next_page = soup.find('li', class_='next')
+    return next_page
+
+
+def check_response(response):
+    try:
+        response.raise_for_status()
+        return True
+    except requests.HTTPError as err:
+        print(f'Нажаль виникла помилка. Код помилки: {err.response.status_code}')
+        return False
+
+
+def scraper(writer):
+    page_num = 0
+    while True:
+        url = 'https://quotes.toscrape.com/page/'
+        page_num += 1
+        response = requests.get(f'{url}{page_num}')
+        if not check_response(response):
+            break
+        soup = BeautifulSoup(response.text, 'lxml')
+        next_page = next_page_check(soup)
+        if next_page:
+            quote_blocks = get_quote_blocks(soup)
+            for block in quote_blocks:
+                author, quote = get_author_and_quote(block)
+                csv_writer(author, quote, writer, block)
+            print(f'Page {page_num}: Complete.')
+        else:
+            break
+
+
+def csv_open():
+    with open('authors.csv', 'w', encoding='utf-8', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Name', 'Born', 'Quote'])
+        scraper(writer)
+        print('End.')
+
+
+def start():
+    csv_open()
+
+
+start()
