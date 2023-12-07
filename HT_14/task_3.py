@@ -15,21 +15,33 @@ def author_to_dict():
     soup_about = BeautifulSoup(resp_about.text, 'lxml')
     born_date = soup_about.find("span", class_="author-born-date").text
     born_location = soup_about.find("span", class_="author-born-location").text
-    born_text = born_date + ' ' + born_location
+    born_text = ' '.join([born_date, born_location])
     author_born[author] = born_text
+
+def func2(data):
+    for section in data:
+        author = section.find("small", itemprop="author").text.replace("\n", "")
+        quote = section.find(itemprop="text").text
+        if author not in author_born:
+            author_to_dict()
+        writer.writerow([author, author_born[author], quote])
+        break
+
+def func1():
+    for page in range(1, 11):
+        response = requests.get(f'https://quotes.toscrape.com/page/{page}')
+        soup = BeautifulSoup(response.text, 'lxml')
+        data = soup.find_all("div", class_="quote")
+        result = func2(data)
+        return result
+
+def page_turner():
+    response = requests.get(f'https://quotes.toscrape.com/page/1')
+    soup = BeautifulSoup(response.text, 'lxml')
+    page_num = soup.find(class_="next").get("href")
 
 with open('authors.csv', 'w', encoding='utf-8', newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(['Name', 'Born', 'Quote'])
     author_born = {}
-    for page in range(1, 11):
-        response = requests.get(f'https://quotes.toscrape.com/page/{page}')
-        soup = BeautifulSoup(response.text, 'lxml')
-        data = soup.find_all("div", class_="quote")
-        for section in data:
-            author = section.find("small", itemprop="author").text.replace("\n", "")
-            quote = section.find(itemprop="text").text
-            if author not in author_born:
-                author_to_dict()
-            writer.writerow([author, author_born[author], quote])
-            break
+    func1()

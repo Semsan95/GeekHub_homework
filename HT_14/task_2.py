@@ -71,36 +71,62 @@ def currency_check(input_date, input_currency):
 
 def date_check(date_str):
     try:
-        datetime.strptime(date_str, '%d.%m.%Y')
-        return True
+        current_date = datetime.strptime(date_str, '%d.%m.%Y')
+        if current_date <= datetime.now() and current_date.year >= datetime.now().year - 4:
+            return True
     except ValueError:
         return False
 
 
+def date_compare(start_date, end_date):
+    start_date = datetime.strptime(start_date, '%d.%m.%Y')
+    end_date = datetime.strptime(end_date, '%d.%m.%Y')
+    if start_date >= end_date:
+        return False
+    else:
+        return True
+
+
+def one_date_menu():
+    input_date = input('Введіть дату в форматі - дд.мм.рррр: ')
+    if date_check(input_date):
+        input_currency = input('Введіть бажану валюту в форматі - UAH: ')
+        if one_date(input_date, input_currency):
+            return True
+    else:
+        print('Некоректний формат дати. Введіть дату - дд.мм.рррр, за останні 4 роки. \n')
+
+
+def interval_menu():
+    start_date = input('Введіть початкову дату, в форматі - дд.мм.рррр: ')
+    end_date = input('Введіть кінцеву дату, в форматі - дд.мм.рррр: ')
+    if date_check(start_date) and date_check(end_date):
+        if date_compare(start_date, end_date):
+            input_currency = input('Введіть бажану валюту в форматі - UAH: ')
+            if interval_date(start_date, end_date, input_currency):
+                return True
+        else:
+            print('Початкова дата не може бути більшою ніж кінцева. \n')
+    else:
+        print('Некоректний формат дати. Введіть дату - дд.мм.рррр, за останні 4 роки. \n')
+
+
 def start():
     while True:
+        print('Архів курсів валют ПриватБанку, НБУ за останні 4 роки.')
         print('1. Дізнатись курс на конкретну дату')
         print('2. Дізнатись курс за певний інтервал')
+        print('3. Вийти')
         check = input('Виберіть дію: ')
-
         if check == '1':
-            input_date = input('Введіть дату в форматі - дд.мм.рррр: ')
-            if date_check(input_date):
-                input_currency = input('Введіть бажану валюту в форматі - UAH: ')
-                if one_date(input_date, input_currency):
-                    break
-            else:
-                print('Некоректний формат дати. Будь ласка, введіть у форматі - дд.мм.рррр. \n')
-
+            if one_date_menu():
+                break
         elif check == '2':
-            start_date = input('Введіть початкову дату в форматі - дд.мм.рррр: ')
-            end_date = input('Введіть кінцеву дату в форматі - дд.мм.рррр: ')
-            if date_check(start_date) and date_check(end_date):
-                input_currency = input('Введіть бажану валюту в форматі - UAH: ')
-                if interval_date(start_date, end_date, input_currency):
-                    break
-            else:
-                print('Некоректний формат дати. Будь ласка, введіть у форматі - дд.мм.рррр. \n')
+            if interval_menu():
+                break
+        elif check == '3':
+            print('Гарного дня!')
+            break
         else:
             print('Вибраного варіанту не існує, спробуйте ще раз. \n')
 
