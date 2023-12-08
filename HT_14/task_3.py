@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 
 
 def author_to_dict(author, block):
-    url_about = "https://quotes.toscrape.com" + block.find("a").get("href")
+    url_about = ''.join(["https://quotes.toscrape.com", block.find("a").get("href")])
     response_about = requests.get(url_about)
     soup_about = BeautifulSoup(response_about.text, 'lxml')
     born_date = soup_about.find("span", class_="author-born-date").text
@@ -61,7 +61,7 @@ def scraper(writer):
             break
         soup = BeautifulSoup(response.text, 'lxml')
         next_page = next_page_check(soup)
-        if next_page:
+        if next_page and page_num != 11:
             quote_blocks = get_quote_blocks(soup)
             for block in quote_blocks:
                 author, quote = get_author_and_quote(block)
