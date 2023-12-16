@@ -11,7 +11,8 @@ import csv
 
 class GooglewebstorePipeline:
     def __init__(self):
-        self.csv_file = open('extentions.csv', 'w', newline='', encoding='utf-8')
+        self.csv_file = open('extentions.csv', 'w',
+                             newline='', encoding='utf-8')
         self.csv_writer = csv.writer(self.csv_file)
         self.csv_writer.writerow(['id', 'name', 'description'])
 
