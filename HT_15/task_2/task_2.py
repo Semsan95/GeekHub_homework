@@ -5,9 +5,9 @@
 '''
 
 import csv
+from time import sleep
 import random
 import requests
-from time import sleep
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 
@@ -22,18 +22,18 @@ def random_sleep():
 
 def get_soup(next_page):
     url = 'https://www.expireddomains.net/deleted-domains/'
-    final_url = ''.join([url, next_page])
+    final_url = f'{url}{next_page}'
     response = requests.get(final_url, headers=headers)
     soup = BeautifulSoup(response.text, 'lxml')
     return soup
 
 
-def next_page_check(soup): # якщо є - відкриваємо наступну сторінку
+def next_page_check(soup):
     next_page = soup.find('a', class_='next')
     return next_page
 
 
-def get_domains(soup): # з супу обраної сторінки знаходить кожен домен і повертає його список
+def get_domains(soup):
     domains_group = soup.find_all('td', class_='field_domain')
     domains_list = []
     for domain in domains_group:
