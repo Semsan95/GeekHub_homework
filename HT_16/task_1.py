@@ -109,9 +109,10 @@ class OrderRobot:
         preview = self.wait_for_condition('button#preview')
         self.driver.execute_script("arguments[0].click();", preview)
 
-    def save_screenshot(self):
+    def take_screenshot(self):
         robo_pic = self.wait_for_condition('div[id="robot-preview-image"]')
-        sleep(5)
+        self.driver.execute_script("arguments[0].scrollIntoView();", robo_pic)
+        sleep(1)
         robo_pic.screenshot(str(self.output_directory / 'temp_name.png'))
 
     def click_order(self):
@@ -150,7 +151,7 @@ class OrderRobot:
             self.select_legs(order['Legs'])
             self.select_address(order['Address'])
             self.click_preview()
-            self.save_screenshot()
+            self.take_screenshot()
             self.click_order()
             self.picture_rename()
             self.order_another_robot()
