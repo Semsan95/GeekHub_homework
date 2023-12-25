@@ -17,7 +17,7 @@
     Покладіть зображення в директорію output
     (яка має створюватися/очищатися під час запуску скрипта).
     - замовте наступного робота (шляхом натискання відповідної кнопки)
-    '''
+'''
 
 import os
 import csv
@@ -45,13 +45,13 @@ class OrderRobot:
         self.output_directory = self.output_directory.resolve()
         self.orders_dicts = self.get_orders()
 
-    def find_CSS_element(self, elem_link):
+    def find_css_element(self, elem_link):
         element = self.driver.find_element(By.CSS_SELECTOR, elem_link)
         return element
 
     def wait_for_condition(self, elem_link):
         element = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable(self.find_CSS_element(elem_link))
+            EC.element_to_be_clickable(self.find_css_element(elem_link))
         )
         return element
 
@@ -112,7 +112,7 @@ class OrderRobot:
     def take_screenshot(self):
         robo_pic = self.wait_for_condition('div[id="robot-preview-image"]')
         self.driver.execute_script("arguments[0].scrollIntoView();", robo_pic)
-        sleep(1)
+        sleep(2)
         robo_pic.screenshot(str(self.output_directory / 'temp_name.png'))
 
     def click_order(self):
@@ -164,6 +164,7 @@ class OrderRobot:
         self.open_order_page()
         self.load_robots()
         self.close_browser()
+
 
 order = OrderRobot()
 order.start()
