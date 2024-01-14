@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load cart_filters %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина товарів</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        th, td {
+            /* border: 1px solid #000; */
+            padding: 8px;
+            text-align: left;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #313131;
+        }
+
+        .cart_clear {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-image: url('/static/img.png');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+        }
+
+        h2 {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: start;
+            display: inline-block;
+        }
+
+        input[type="number"] {
+            width: 50px;
+        }
+
+        .delete-button-cell {
+            text-align: right;
+            width: 5%;
+        }
+
+        .delete-button-cell button {
+            width: 100%;
+            height: 100%;
+            border-radius: 5px;
+            border: none;
+            background-color: #87B0FF;
+            color: #fff;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .delete-button-cell button:hover {
+            background-color: #5c8bff;
+            transform: scale(1.10);
+            padding: 5px 10px;
+        }
+
+        .quantity-cell button {
+            height: 100%;
+            border-radius: 5px;
+            border: none;
+            background-color: #87B0FF;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .sum-column {
+            width: 10%;
+        }
+
+        .quantity-column {
+            width: 10%;
+        }
+
+        .price-column {
+            width: 10%;
+        }
+
+        .product-cell button:hover {
+            transform: scale(1.10);
+        }
+
+        .search-button-container {
+            position: absolute;
+            top: 60px;
+            right: 10px;
+        }
+
+        .search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .imported-button-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .imported-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .subtract-button, .add-button {
+            transform: scale(1.5);
+            margin: 0 10px;
+        }
+
+    </style>
+</head>
+<body>
+        <h2>Корзина товарів</h2>
+    <div class="search-button-container">
+        <a href="{% url 'search' %}" class="search-link">
+            <button class="search-button" type="button">Пошук</button>
+        </a>
+    </div>
+    <div class="imported-button-container">
+        <a href="{% url 'imported' %}" class="imported-link">
+            <button class="imported-button" type="button">Завантажені товари</button>
+        </a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th class="product-column">Товар</th>
+                <th class="price-column">Ціна</th>
+                <th class="quantity-column">Кількість</th>
+                <th class="sum-column">Сума</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+                <tr>
+                    <td class="product-cell">
+                        <a href="{% url 'details' item.product.id %}" class="product-cell">
+                            {{ item.product.name }}
+                        </a>
+                    </td>
+                    <td class="price-cell">{{ item.product.price }}$</td>
+                    <td class="quantity-cell">
+
+                        <a href="{% url 'cart_subtract_button' item.product.id %}" class="subtract_url">
+                            <button class="subtract-button" type="button">-</button></a>
+                        {{ item.quantity }}
+                        <a href="{% url 'cart_add_button' item.product.id %}" class="add_url">
+                            <button class="add-button" type="button">+</button>
+                        </a>
+                    </td>
+                    <td class="sum-cell">{{ item.product.price|multiply:item.quantity }}$</td>
+                    <td class="delete-button-cell">
+                        <a href="{% url 'cart_remove_button' item.product.id %}" class="delete_url">
+                            <button>Видалити</button>
+                        </a>
+                    </td>
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'cart_clear_button' %}" class="cart_clear_url">
+        <button class="cart_clear" type="button">Очистити корзину</button>
+    </a>
+
+
+</body>
+</html>
