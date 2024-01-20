@@ -1,42 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Список товарів</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'products/style.css' %}">
-</head>
-<body>
-    <div class="search-button-container">
-        <a href="{% url 'search' %}" class="search-link">
-            <button class="search-button" type="button">Пошук</button>
-        </a>
-    </div>
-    
-    <div class="cart-button-container">
-        <a href="{% url 'cart' %}" class="imported-link">
-            <button class="cart-button" type="button">Корзина</button>
-        </a>
-    </div>
+{% extends "base.html" %}
 
-    <div class="product-container">
-        {% for product in products %}
-            <div class="product-card">
-                <div class="product-info">
-                    <div class="product-title">{{ product.name }}</div>
-                    <div class="product-price">Ціна: ${{ product.price }}</div>
-                </div>
-                
-                <div class="buttons-container">
-                <a href="{% url 'details' product.id %}" class="product-button">Детальніше</a>
-                <form method="POST" action="{% url 'add_to_cart' product.id %}">
-                    {% csrf_token %}
-                    <input type="submit" value="В корзину" class="product-button">
-                </div>
-                </form>
+{% block title %}
+Список товарів
+{% endblock %}
+
+{% block extra_style %}
+<style>
+    .product-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        align-items: flex-end;
+        padding: 30px 90px 0 0;
+    }
+
+    .product-card {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+        width: 245px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+        margin-bottom: 20px;
+    }
+
+    .product-card:hover {
+        transform: scale(1.05);
+    }
+
+    .product-info {
+        padding: 10px;
+    }
+
+    .product-title {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    .product-price {
+        font-size: 16px;
+        color: #333;
+    }
+
+    .buttons-container {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .product-button {
+        display: block;
+        width: 100%;
+        font-size: 16px;
+        padding: 10px;
+        text-align: center;
+        background-color: #87B0FF;
+        color: #fff;
+        text-decoration: none;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-top: auto;
+    }
+
+    .product-button:hover {
+        background-color: #2D7AFF;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="product-container">
+    {% for product in products %}
+        <div class="product-card">
+            <div class="product-info">
+                <div class="product-title">{{ product.name }}</div>
+                <div class="product-price">Ціна: ${{ product.price }}</div>
             </div>
-        {% endfor %}
-    </div>
-</body>
-</html>
+            
+            <div class="buttons-container">
+            <a href="{% url 'products:details' product.id %}" class="product-button">Детальніше</a>
+            <form method="POST" action="{% url 'cart:add' product.id %}">
+                {% csrf_token %}
+                <input type="submit" value="В корзину" class="product-button">
+            </div>
+            </form>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,107 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Додати продукти</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            background-image: url('/static/img.png');
-            background-size: cover;
-            background-position: center;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+{% extends "base.html" %}
 
-        .input-container {
-            text-align: center;
-            margin-top: -400px;
-        }
+{% block search_button %}{% endblock %}
 
-        input {
-            padding: 10px;
-            font-size: 16px;
-            width: 600px;
-            line-height: 20px;
-        }
+{% block title %}
+Додати продукти
+{% endblock %}
 
-        button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+{% block extra_style %}
+<style>
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        .imported-button-container {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
+    .input-container {
+        text-align: center;
+        margin-top: -400px;
+    }
 
-        .imported-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+    input {
+        padding: 10px;
+        font-size: 16px;
+        width: 600px;
+        line-height: 20px;
+    }
 
-        .cart-button-container {
-            position: absolute;
-            top: 60px;
-            right: 10px;
-        }
+    button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
 
-        .cart-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+    .imported-button-container {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
 
-        .search-message {
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-        }
+    .imported-button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
 
-        .search-message p {
-            margin: 0;
-            color: #333;
-        }
+    .search-message {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+    }
 
-    </style>
-</head>
-<body>
+    .search-message p {
+        margin: 0;
+        color: #333;
+    }
+</style>
+{% endblock %}
 
-    <div class="input-container">
-        {% if search_started %}
-        <div class="search-message">
-            <p>Пошук розпочато! Результати будуть доступні найближчим часом.</p>
-        </div>
-        {% endif %}
-
-        <form id="searchForm" action="{% url 'fetch' %}" method="post">
-            <input type="text" name="product_ids" placeholder="Введіть ID товарів">
-            <br>
-            <button type="submit">Пошук</button>
-        </form>
+{% block content %}
+<div class="input-container">
+    {% if search_started %}
+    <div class="search-message">
+        <p>Пошук розпочато! Результати будуть доступні найближчим часом.</p>
     </div>
+    {% endif %}
 
-    <div class="imported-button-container">
-        <a href="{% url 'imported' %}" class="imported-link">
-            <button class="imported-button" type="button">Завантажені товари</button>
-        </a>
-    </div>
-    
-    <div class="cart-button-container">
-        <a href="{% url 'cart' %}" class="cart-link">
-            <button class="cart-button" type="button">Корзина</button>
-        </a>
-    </div>
+    <form id="searchForm" action="{% url 'products:fetch' %}" method="post">
+        <input type="text" name="product_ids" placeholder="Введіть ID товарів">
+        <br>
+        <button type="submit">Пошук</button>
+    </form>
+</div>
 
-</body>
-</html>
+<div class="imported-button-container">
+    <a href="{% url 'products:imported' %}" class="imported-link">
+        <button class="imported-button" type="button">Завантажені товари</button>
+    </a>
+</div>
+{% endblock %}
