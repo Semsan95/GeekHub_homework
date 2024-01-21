@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: url('/static/img.png');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+        }   
+
+        .search-button-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .cart-button-container {
+            position: absolute;
+            top: 60px;
+            right: 10px;
+        }
+
+        .cart-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .login-button-container, .logout-button-container {
+            position: absolute;
+            top: 110px;
+            right: 10px;
+        }
+
+        .login-button, .logout-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .product-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        align-items: flex-end;
+        padding: 30px 90px 0 0;
+        }
+
+        .product-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            width: 245px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 10px;
+        }
+
+        .product-title {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .product-button {
+            display: block;
+            width: 100%;
+            font-size: 16px;
+            padding: 10px;
+            text-align: center;
+            background-color: #87B0FF;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: auto;
+        }
+
+        .product-button:hover {
+            background-color: #2D7AFF;
+        }
+
+        .name-container {
+            position: absolute;
+            top: 110px;
+            right: 150px;
+            font-size: 20px;
+        }
+    </style>
+    {% block extra_style %}{% endblock %}
+</head>
+<body>
+    {% block content %}{% endblock %}
+
+    <div class="search-button-container">
+        {% block search_button %}
+        <a href="{% url 'products:search' %}" class="search-link">
+            <button class="search-button" type="button">Пошук</button>
+        </a>
+        {% endblock %}
+    </div>
+
+    {% if user.is_authenticated %}
+        <div class="cart-button-container">
+            <a href="{% url 'cart:cart_home' %}" class="cart-link">
+                <button class="cart-button" type="button">Корзина</button>
+            </a>
+        </div>
+        
+        <div class="name-container">
+            <p>{{ user.username }}</p>
+        </div>
+
+        <div class="logout-button-container">
+            <form action="{% url 'accounts:logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="logout-button">LOG OUT</button>
+            </form>
+        </div>
+    {% else %}
+        <div class="login-button-container">
+            <a href="{% url 'accounts:login' %}" class="login-link">
+                <button class="login-button" type="button">LOG IN</button>
+            </a>
+        </div>
+    {% endif %}
+    
+    <div class="product-container">
+        {% for product in products %}
+            <div class="product-card">
+                <div class="product-info">
+                    <div class="product-title">{{ product.name }}</div>
+                    <div class="product-price">Ціна: ${{ product.price }}</div>
+                </div>
+                
+                <div class="buttons-container">
+                    <a href="{% url 'products:details' product.id %}" class="product-button">Детальніше</a>
+                    {% if user.is_authenticated %}
+                        <form method="POST" action="{% url 'cart:add' product.id %}">
+                            {% csrf_token %}
+                            <input type="submit" value="В корзину" class="product-button">
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

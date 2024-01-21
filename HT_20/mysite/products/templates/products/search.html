@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block search_button %}{% endblock %}
+
+{% block title %}
+Додати продукти
+{% endblock %}
+
+{% block extra_style %}
+<style>
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .input-container {
+        text-align: center;
+        margin-top: -400px;
+    }
+
+    input {
+        padding: 10px;
+        font-size: 16px;
+        width: 600px;
+        line-height: 20px;
+    }
+
+    button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .imported-button-container {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .imported-button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .search-message {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+    }
+
+    .search-message p {
+        margin: 0;
+        color: #333;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="input-container">
+    {% if notification %}
+    <div class="search-message">
+        <p>{{ notification }}</p>
+    </div>
+    {% endif %}
+
+    <form id="searchForm" action="{% url 'products:fetch' %}" method="post">
+        <input type="text" name="product_ids" placeholder="Введіть ID товарів">
+        <br>
+        <button type="submit">Пошук</button>
+    </form>
+</div>
+
+<div class="imported-button-container">
+    <a href="{% url 'products:imported' %}" class="imported-link">
+        <button class="imported-button" type="button">Завантажені товари</button>
+    </a>
+</div>
+<div class="catedories-container">
+    <h2>Категорії</h2>
+    <ul>
+        {% for category in categories %}
+        <li><a href="{% url 'products:category' category.id %}">{{ category.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

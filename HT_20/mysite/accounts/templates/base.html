@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: url('/static/img.png');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+        }
+
+        .search-button-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .cart-button-container {
+            position: absolute;
+            top: 60px;
+            right: 10px;
+        }
+
+        .cart-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+    {% block extra_style %}{% endblock %}
+</head>
+<body>
+    {% block content %}{% endblock %}
+
+    <div class="search-button-container">
+        {% block search_button %}
+        <a href="{% url 'products:search' %}" class="search-link">
+            <button class="search-button" type="button">Пошук</button>
+        </a>
+        {% endblock %}
+    </div>
+
+    <div class="cart-button-container">
+        <a href="{% url 'cart:cart_home' %}" class="cart-link">
+            <button class="cart-button" type="button">Корзина</button>
+        </a>
+    </div>
+</body>
+</html>

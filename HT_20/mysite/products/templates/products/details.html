@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}
+Деталі продукту
+{% endblock %}
+
+{% block extra_style %}
+<style>
+    .product-details {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .detail-label {
+        font-weight: bold;
+    }
+
+    .detail-value {
+        margin-bottom: 15px;
+    }
+
+    .detail-link {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .detail-link:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+{% if notification %}
+<div class="search-message">
+    <p>{{ notification }}</p>
+</div>
+{% endif %}
+
+<div class="product-details">
+    <h1>{{ product.name }}</h1>
+
+    <div class="detail-label">Ціна:</div>
+    <div class="detail-value">${{ product.price }}</div>
+
+    <div class="detail-label">ІД:</div>
+    <div class="detail-value">{{ product.product_id }}</div>
+
+    <div class="detail-label">Опис:</div>
+    <div class="detail-value">{{ product.description|safe }}</div>
+
+    <div class="detail-label">Бренд:</div>
+    <div class="detail-value">{{ product.brand }}</div>
+
+    <div class="detail-label">Категорія:</div>
+    <div class="detail-value">{{ product.category }}</div>
+
+    <div class="detail-label">Посилання на продукт:</div>
+    <div class="detail-value"><a class="detail-link" href="{{ product.link }}">{{ product.link }}</a></div>
+</div>
+{% if user.is_superuser %}
+<div class="controls-container">
+    <a href="{% url 'admin:products_product_change' product.id %}" class="edit-link">
+        <button class="edit-button" type="button">Редагувати</button>
+    </a>
+    <a href="{% url 'admin:products_product_delete' product.id %}" class="delete-link">
+        <button class="delete-button" type="button">Видалити</button>
+    </a>
+    <form id="searchForm" action="{% url 'products:fetch' %}" method="post">
+        <input type="hidden" name="product_ids" value="{{ product.product_id }}">
+        <br>
+        <button type="submit">Оновити</button>
+    </form>
+</div>
+
+{% endif %}
+{% endblock %}
