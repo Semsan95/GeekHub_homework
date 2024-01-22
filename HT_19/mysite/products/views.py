@@ -33,7 +33,7 @@ def fetch(request):
     product_ids = request.POST.get('product_ids', '')
     threading.Thread(
         target=fetch_product_list,
-        args=(product_ids, Product),
+        args=(product_ids, ),
         daemon=True
     ).start()
     return HttpResponseRedirect(f"{reverse('products:search')}?search_started=True")

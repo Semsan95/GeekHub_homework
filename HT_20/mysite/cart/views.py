@@ -5,6 +5,7 @@ from django.urls import reverse
 from products.models import Product
 from django.contrib.auth.decorators import login_required
 
+
 @login_required
 def cart_home(request):
     cart = request.session.get('cart', {})
@@ -17,6 +18,7 @@ def cart_home(request):
             'quantity': quantity,
         })
     return render(request, "cart\cart.html", {'cart_items': cart_items})
+
 
 @login_required
 def add(request, product_id):
@@ -32,12 +34,14 @@ def add(request, product_id):
     request.session.modified = True
     return HttpResponseRedirect(reverse('products:imported'))
 
+
 @login_required
 def increase(request, product_id):
     product_id = str(product_id)
     request.session['cart'][product_id]['quantity'] += 1
     request.session.modified = True
     return HttpResponseRedirect(reverse('cart:cart_home'))
+
 
 @login_required
 def decrease(request, product_id):
@@ -47,12 +51,14 @@ def decrease(request, product_id):
     request.session.modified = True
     return HttpResponseRedirect(reverse('cart:cart_home'))
 
+
 @login_required
 def remove(request, product_id):
     product_id = str(product_id)
     del request.session['cart'][product_id]
     request.session.modified = True
     return HttpResponseRedirect(reverse('cart:cart_home'))
+
 
 @login_required
 def clear(request):

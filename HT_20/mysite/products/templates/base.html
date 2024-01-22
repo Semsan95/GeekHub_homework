@@ -13,7 +13,11 @@
             background-size: cover;
             background-position: center;
             height: 100vh;
-        }   
+        }
+
+        button {
+            margin-top: 10px;
+        }
 
         .search-button-container {
             position: absolute;
@@ -41,8 +45,8 @@
 
         .login-button-container, .logout-button-container {
             position: absolute;
-            top: 110px;
-            right: 10px;
+            top: 10px;
+            left: 10px;
         }
 
         .login-button, .logout-button {
@@ -115,10 +119,14 @@
 
         .name-container {
             position: absolute;
-            top: 110px;
-            right: 150px;
+            top: 10px;
+            left: 150px;
             font-size: 20px;
+            font-weight: bold;
+            color: blue;
+            height: 10px;
         }
+
     </style>
     {% block extra_style %}{% endblock %}
 </head>

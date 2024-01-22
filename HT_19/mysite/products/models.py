@@ -12,22 +12,3 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
-
-    @classmethod
-    def create_or_update_product(cls, product_id, product_data):
-
-        try:
-            product = cls.objects.get(product_id=product_id)
-        except cls.DoesNotExist:
-            product = cls(product_id=product_id)
-        finally:
-            product.name = product_data['name']
-            product.price = float(product_data['price'])
-            product.description = product_data['description']
-            product.brand = product_data['brand']
-            product.category = product_data['category']
-            product.link = product_data['link']
-            product.save()
-
-        return product
-    
