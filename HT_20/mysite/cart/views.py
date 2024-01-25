@@ -17,7 +17,7 @@ def cart_home(request):
             'product': product,
             'quantity': quantity,
         })
-    return render(request, "cart\cart.html", {'cart_items': cart_items})
+    return render(request, "cart/cart.html", {'cart_items': cart_items})
 
 
 @login_required
