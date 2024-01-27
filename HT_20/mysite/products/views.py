@@ -1,3 +1,4 @@
+import decimal
 import threading
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -27,15 +28,28 @@ def search(request, category_id=None):
 def details(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     notification = request.session.pop('notification', None)
-    return render(request, "products/details.html", {
-        'product': product, 
-        'notification': notification
-        })
+    return render(request, "products/details.html", {'product': product})
 
 
 def imported(request):
     products = Product.objects.all()
     return render(request, "products/imported.html", {'products': products})
+
+def edit(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    categories = Category.objects.all()
+    if request.method == 'POST':
+        product.name = request.POST.get('name')
+        product.price = request.POST.get('price')
+        product.description = request.POST.get('description')
+        product.brand = request.POST.get('brand')
+        product.category = Category.objects.get(name=request.POST.get('category'))
+        product.save()
+        return HttpResponseRedirect(reverse('products:details', args=(product.id, )))
+    return render(request, 'products/edit.html', {
+        'product': product,
+        'categories': categories
+    })
 
 
 @login_required

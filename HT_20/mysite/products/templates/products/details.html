@@ -41,59 +41,52 @@
         max-width: 600px;
         margin: 0 auto 20px;
     }
-
     .controls-container {
-        max-width: 600px;
-        margin: 0 auto;
         display: flex;
         justify-content: space-between;
+        max-width: 600px;
+        margin: 0 auto 20px;
     }
-
+    .controls-container .edit-button,
+    .controls-container .delete-button {
+        margin-top: 0px;
+        font-size: 16px;
+        padding: 10px 20px;
+    }
 </style>
 {% endblock %}
+
 {% block content %}
+    {% if user.is_superuser %}
+        <div class="controls-container" style="font-size: 16px">
+            <a href="{% url 'products:edit' product.id %}" class="edit-link">
+                <button class="edit-button" type="button">Редагувати</button>
+            </a>
+            <a href="{% url 'admin:products_product_delete' product.id %}" class="delete-link">
+                <button class="delete-button" type="button">Видалити</button>
+            </a>
+        </div>
+    {% endif %}
 
-{% if notification %}
-<div class="search-message">
-    <p>{{ notification }}</p>
-</div>
-{% endif %}
+    <div class="product-details">
+        <h1>{{ product.name }}</h1>
 
-<div class="product-details">
-    <h1>{{ product.name }}</h1>
+        <div class="detail-label">Ціна:</div>
+        <div class="detail-value">${{ product.price }}</div>
 
-    <div class="detail-label">Ціна:</div>
-    <div class="detail-value">${{ product.price }}</div>
+        <div class="detail-label">ІД:</div>
+        <div class="detail-value">{{ product.product_id }}</div>
 
-    <div class="detail-label">ІД:</div>
-    <div class="detail-value">{{ product.product_id }}</div>
+        <div class="detail-label">Опис:</div>
+        <div class="detail-value">{{ product.description|safe }}</div>
 
-    <div class="detail-label">Опис:</div>
-    <div class="detail-value">{{ product.description|safe }}</div>
+        <div class="detail-label">Бренд:</div>
+        <div class="detail-value">{{ product.brand }}</div>
 
-    <div class="detail-label">Бренд:</div>
-    <div class="detail-value">{{ product.brand }}</div>
+        <div class="detail-label">Категорія:</div>
+        <div class="detail-value">{{ product.category }}</div>
 
-    <div class="detail-label">Категорія:</div>
-    <div class="detail-value">{{ product.category }}</div>
-
-    <div class="detail-label">Посилання на продукт:</div>
-    <div class="detail-value"><a class="detail-link" href="{{ product.link }}">{{ product.link }}</a></div>
-</div>
-{% if user.is_superuser %}
-<div class="controls-container">
-    <a href="{% url 'admin:products_product_change' product.id %}" class="edit-link">
-        <button class="edit-button" type="button">Редагувати</button>
-    </a>
-    <a href="{% url 'admin:products_product_delete' product.id %}" class="delete-link">
-        <button class="delete-button" type="button">Видалити</button>
-    </a>
-    <form id="searchForm" action="{% url 'products:fetch' %}" method="post">
-        <input type="hidden" name="product_ids" value="{{ product.product_id }}">
-        <br>
-        <button type="submit">Оновити</button>
-    </form>
-</div>
-
-{% endif %}
+        <div class="detail-label">Посилання на продукт:</div>
+        <div class="detail-value"><a class="detail-link" href="{{ product.link }}">{{ product.link }}</a></div>
+    </div>
 {% endblock %}

@@ -56,11 +56,11 @@
         }
 
         .product-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        align-items: flex-end;
-        padding: 30px 90px 0 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: flex-end;
+            padding: 30px 90px 0 0;
         }
 
         .product-card {
@@ -140,19 +140,22 @@
             color: #333;
         }
     </style>
-    {% block extra_style %}{% endblock %}
+    {% block extra_style %}
+    {% endblock %}
 </head>
 <body>
-    {% block content %}{% endblock %}
+    {% block content %}
+    {% endblock %}
 
+    {% block search_button %}
     <div class="search-button-container">
-        {% block search_button %}
         <a href="{% url 'products:search' %}" class="search-link">
             <button class="search-button" type="button">Пошук</button>
         </a>
-        {% endblock %}
     </div>
-{% block content2 %}
+    {% endblock %}
+
+    {% block login %}
     {% if user.is_authenticated %}
         <div class="cart-button-container">
             <a href="{% url 'cart:cart_home' %}" class="cart-link">
@@ -177,7 +180,8 @@
             </a>
         </div>
     {% endif %}
-{% endblock %}
+    {% endblock %}
+
     <div class="product-container">
         {% for product in products %}
             <div class="product-card">
