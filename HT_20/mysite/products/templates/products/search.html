@@ -75,11 +75,11 @@
 
 {% block content %}
 <div class="input-container">
-    {% if notification %}
+    {% for message in messages %}
     <div class="search-message">
-        <p>{{ notification }}</p>
+        <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
     </div>
-    {% endif %}
+    {% endfor %}
     {% if user.is_superuser %}
     <form id="searchForm" action="{% url 'products:fetch' %}" method="post">
         <input type="text" name="product_ids" placeholder="Введіть ID товарів">

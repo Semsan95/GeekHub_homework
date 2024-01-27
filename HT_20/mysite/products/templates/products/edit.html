@@ -43,6 +43,18 @@
             top: 45px;
             left: 10px;
         }
+
+        .search-message {
+            width: 600px;
+            margin: auto;
+            
+        }
+
+        .search-message p {
+            margin: auto;
+            text-align: center;
+        }
+
     </style>
 {% endblock %}
 
@@ -53,6 +65,14 @@
         <button type="submit" style="font-size: 16px; padding: 10px 20px;">Оновити з сайту</button>
     </form>
     
+    {% for message in messages %}
+    <div class="search-message">
+        <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+    </div>
+    {% endfor %}
+
+    <br>
+
     <form method="POST" class="edit-form">
         {% csrf_token %}
         <label for="name">Назва:</label>

@@ -1,4 +1,3 @@
-import decimal
 import threading
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -9,6 +8,7 @@ from django.views.decorators.http import require_POST
 from .models import Product, Category
 from services.parsers import fetch_product_list
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 def search(request, category_id=None): 
@@ -17,9 +17,7 @@ def search(request, category_id=None):
     else:
         products = Product.objects.filter(category_id=category_id)
     categories = Category.objects.all()
-    notification = request.session.pop('notification', None)
     return render(request, "products/search.html", {
-            'notification': notification, 
             'products': products, 
             'categories': categories
             })
@@ -27,7 +25,6 @@ def search(request, category_id=None):
 
 def details(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    notification = request.session.pop('notification', None)
     return render(request, "products/details.html", {'product': product})
 
 
@@ -62,5 +59,5 @@ def fetch(request):
         args=(product_ids, ),
         daemon=True
     ).start()
-    request.session['notification'] = 'Пошук розпочато! Результати будуть доступні найближчим часом.'
+    messages.add_message(request, messages.INFO, 'Пошук розпочато! Результати будуть доступні найближчим часом.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('products:search')))
