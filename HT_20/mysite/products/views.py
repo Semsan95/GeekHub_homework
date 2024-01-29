@@ -1,6 +1,6 @@
 import threading
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -32,7 +32,11 @@ def imported(request):
     products = Product.objects.all()
     return render(request, "products/imported.html", {'products': products})
 
+
 def edit(request, product_id):
+    if not request.user.is_staff:
+        messages.success(request, 'Ви не маєте права доступу до цієї сторінки')
+        return redirect('products:search')
     product = get_object_or_404(Product, id=product_id)
     categories = Category.objects.all()
     if request.method == 'POST':
@@ -48,6 +52,20 @@ def edit(request, product_id):
         'categories': categories
     })
 
+@login_required
+def confirm_delete(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    return render(request, 'products/confirm_delete.html', {'product': product})
+
+@login_required
+def delete(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == 'POST':
+        product.delete()
+        messages.success(request, 'Продукт успішно видалено.')
+        return redirect('products:search')
+    else:
+        return redirect('products:confirm_delete', product_id=product.id)
 
 @login_required
 @require_POST
