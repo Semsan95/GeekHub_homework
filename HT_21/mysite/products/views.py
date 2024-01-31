@@ -1,6 +1,6 @@
 import threading
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -8,19 +8,21 @@ from django.views.decorators.http import require_POST
 from .models import Product, Category
 from services.parsers import fetch_product_list
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 def search(request, category_id=None): 
     if category_id is None:
         products = Product.objects.all()
+        filter_hidden = True
     else:
         products = Product.objects.filter(category_id=category_id)
+        filter_hidden = False
     categories = Category.objects.all()
-    notification = request.session.pop('notification', None)
     return render(request, "products/search.html", {
-            'notification': notification, 
             'products': products, 
-            'categories': categories
+            'categories': categories,
+            'filter_hidden': filter_hidden
             })
 
 
@@ -33,7 +35,11 @@ def imported(request):
     products = Product.objects.all()
     return render(request, "products/imported.html", {'products': products})
 
+
 def edit(request, product_id):
+    if not request.user.is_staff:
+        messages.success(request, 'Ви не маєте права доступу до цієї сторінки')
+        return redirect('products:search')
     product = get_object_or_404(Product, id=product_id)
     categories = Category.objects.all()
     if request.method == 'POST':
@@ -49,6 +55,20 @@ def edit(request, product_id):
         'categories': categories
     })
 
+@login_required
+def confirm_delete(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    return render(request, 'products/confirm_delete.html', {'product': product})
+
+@login_required
+def delete(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == 'POST':
+        product.delete()
+        messages.success(request, 'Продукт успішно видалено.')
+        return redirect('products:search')
+    else:
+        return redirect('products:confirm_delete', product_id=product.id)
 
 @login_required
 @require_POST
@@ -60,5 +80,5 @@ def fetch(request):
         args=(product_ids, ),
         daemon=True
     ).start()
-    request.session['notification'] = 'Пошук розпочато! Результати будуть доступні найближчим часом.'
+    messages.add_message(request, messages.INFO, 'Пошук розпочато! Результати будуть доступні найближчим часом.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('products:search')))

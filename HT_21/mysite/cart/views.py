@@ -32,7 +32,7 @@ def add(request, product_id):
         request.session['cart'][product_id] = {'quantity': 1}
 
     request.session.modified = True
-    return HttpResponseRedirect(reverse('products:imported'))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/search'))
 
 
 @login_required

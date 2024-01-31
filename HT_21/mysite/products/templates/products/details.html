@@ -62,7 +62,7 @@
             <a href="{% url 'products:edit' product.id %}" class="edit-link">
                 <button class="edit-button" type="button">Редагувати</button>
             </a>
-            <a href="{% url 'admin:products_product_delete' product.id %}" class="delete-link">
+            <a href="{% url 'products:confirm-delete' product.id %}" class="delete-link">
                 <button class="delete-button" type="button">Видалити</button>
             </a>
         </div>

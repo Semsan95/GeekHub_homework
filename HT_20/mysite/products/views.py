@@ -14,12 +14,15 @@ from django.contrib import messages
 def search(request, category_id=None): 
     if category_id is None:
         products = Product.objects.all()
+        filter_hidden = True
     else:
         products = Product.objects.filter(category_id=category_id)
+        filter_hidden = False
     categories = Category.objects.all()
     return render(request, "products/search.html", {
             'products': products, 
-            'categories': categories
+            'categories': categories,
+            'filter_hidden': filter_hidden
             })
 
 

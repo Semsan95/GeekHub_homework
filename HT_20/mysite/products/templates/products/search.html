@@ -48,10 +48,13 @@
         flex-wrap: wrap;
         padding: 0;
         list-style-type: none;
+        width: 94%;
+        margin-top: 80px;
     }
 
     .catedories-container ul li {
         margin-right: 20px;
+        margin-bottom: 20px;
         background-color: rgba(255, 255, 255, 0.8);
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -69,6 +72,9 @@
         display: flex;
     }
     
+    #searchForm {
+    margin-top: 120px; /* Add this line */
+    }
 
 </style>
 {% endblock %}
@@ -86,7 +92,7 @@
         <br>
         <button type="submit">Пошук</button>
         <a href="{% url 'products:search' %}" class="reset-filter">
-            <button type="button">Скинути фільтр</button>
+            <button type="button" {% if filter_hidden %}hidden{% endif %}>Скинути фільтр</button>
         </a>
     </form>
     {% endif %}
