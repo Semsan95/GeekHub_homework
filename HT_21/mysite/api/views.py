@@ -1,23 +1,12 @@
 from django.forms import model_to_dict
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from rest_framework.response import Response
 
 from products.models import Product, Category
 from .serializers.product import ProductSerializer
 from .serializers.category import CategorySerializer
 from .serializers.cart import CartItemSerializer
-
-
-class IsAdminOrReadOnly(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return request.user and request.user.is_staff
-
-
-class IsLoggedIn(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return request.user and request.user.is_authenticated
+from .permissions import IsAdminOrReadOnly, IsLoggedIn
 
 
 class ProductViewSet(viewsets.ModelViewSet):
