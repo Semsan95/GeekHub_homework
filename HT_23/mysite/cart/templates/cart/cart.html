@@ -1,0 +1,235 @@
+{% load static %}
+{% load cart_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина товарів</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin-top: 20px;
+            padding: 20px;
+            background-image: url('/static/img.png');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+        }
+
+        button {
+            margin-top: 10px;
+        }
+
+        button.pressed:active {
+            background-color: #8f4f13;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #313131;
+        }
+
+        .cart-clear, .subtract-button, .add-button, .delete-button-cell button {
+            background-color: #87B0FF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .cart-clear:hover, .subtract-button:hover, .add-button:hover, .delete-button-cell button:hover {
+            background-color: #5c8bff;
+            transform: scale(1.10);
+        }
+
+        .cart-clear:active, .subtract-button:active, .add-button:active, .delete-button-cell button:active {
+            background-color: #8f4f13;
+            color: white;
+        }
+
+        .delete-button-cell {
+            text-align: right;
+        }
+
+        .cart-clear {
+            display: block;
+            margin: auto;
+        }
+
+        h2 {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            margin: 20px auto 20px;
+            text-align: center;
+            display: block;
+            width: fit-content;
+        }
+
+        input[type="number"] {
+            width: 50px;
+        }
+        
+        .quantity-cell button {
+            height: 100%;
+            border-radius: 5px;
+            border: none;
+            background-color: #87B0FF;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .sum-column {
+            width: 10%;
+        }
+
+        .quantity-column {
+            width: 10%;
+        }
+
+        .price-column {
+            width: 10%;
+        }
+
+        .product-cell button:hover {
+            transform: scale(1.10);
+        }
+
+        .search-button-container {
+            position: absolute;
+            top: 60px;
+            right: 10px;
+        }
+
+        .search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .imported-button-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .imported-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .login-button-container, .logout-button-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        .login-button, .logout-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .name-container {
+            position: absolute;
+            top: 10px;
+            left: 150px;
+            font-size: 20px;
+            font-weight: bold;
+            color: blue;
+            height: 10px;
+        }
+        
+    </style>
+</head>
+<body>
+        <h2>Корзина товарів</h2>
+    <div class="search-button-container">
+        <a href="{% url 'products:search' %}" class="search-link">
+            <button class="search-button" type="button">Пошук</button>
+        </a>
+    </div>
+    <div class="imported-button-container">
+        <a href="{% url 'products:imported' %}" class="imported-link">
+            <button class="imported-button" type="button">Завантажені товари</button>
+        </a>
+    </div>
+{% if user.is_authenticated %}
+    <div class="name-container">
+        <p>{{ user.username }}</p>
+    </div>
+
+    <div class="logout-button-container">
+        <form action="{% url 'accounts:logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="logout-button">LOG OUT</button>
+        </form>
+    </div>
+{% else %}
+    <div class="login-button-container">
+        <a href="{% url 'accounts:login' %}" class="login-link">
+            <button class="login-button" type="button">LOG IN</button>
+        </a>
+    </div>
+{% endif %}
+    <table>
+        <thead>
+            <tr>
+                <th class="product-column">Товар</th>
+                <th class="price-column">Ціна</th>
+                <th class="quantity-column">Кількість</th>
+                <th class="sum-column">Сума</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+                <tr data-product-id="{{ item.product.id }}">
+                    <td class="product-cell">
+                        <a href="{% url 'products:details' item.product.id %}" class="product-cell">
+                            {{ item.product.name }}
+                        </a>
+                    </td>
+                    <td class="price-cell">{{ item.product.price }}$</td>
+                    <td class="quantity-cell">
+                        <button name="decrease" data-product-id="{{ item.product.id }}" class="subtract-button" type="button">-</button>
+                        <span class="quantity">{{ item.quantity }}</span>
+                        <button name="increase" data-product-id="{{ item.product.id }}" class="add-button" type="button">+</button>
+                    </td>
+                    <td class="sum-cell">{{ item.product.price|multiply:item.quantity }}$</td>
+                    <td class="delete-button-cell">
+                        <button name="remove" data-product-id="{{ item.product.id }}" class="remove=button" type="button">Видалити</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <button class="cart-clear" name="clear" type="button">Очистити корзину</button>
+
+    <script src="{% static 'cart/buttons.js' %}"></script>
+</body>
+</html>
