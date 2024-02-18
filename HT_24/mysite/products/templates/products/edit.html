@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Редагувати продукт
+{% endblock %}
+
+{% block extra_style %}
+    <style>
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        form label,
+        form input,
+        form button,
+        form select {
+            width: 100%;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        
+        .edit-form {
+            display: flex;
+            flex-direction: column;
+            max-width: 600px;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 5px;
+            width: 100%;
+        }
+        
+        #description {
+            resize: none;
+            min-height: 200px;
+        }
+        
+        .update {
+            position: absolute;
+            top: 45px;
+            left: 10px;
+        }
+
+        .search-message {
+            width: 600px;
+            margin: auto;
+            
+        }
+
+        .search-message p {
+            margin: auto;
+            text-align: center;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <form class="update" id="searchForm" action="{% url 'products:fetch' %}" method="post">
+        <input type="hidden" name="product_ids" value="{{ product.product_id }}">
+        <br>
+        <button type="submit" style="font-size: 16px; padding: 10px 20px;">Оновити з сайту</button>
+    </form>
+    
+    {% for message in messages %}
+    <div class="search-message">
+        <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+    </div>
+    {% endfor %}
+
+    <br>
+
+    <form method="POST" class="edit-form">
+        {% csrf_token %}
+        <label for="name">Назва:</label>
+        <input type="text" id="name" name="name" value="{{ product.name }}">
+    
+        <label for="price">Ціна:</label>
+        <input type="number" id="price" name="price" step="0.01" min="0" value="{{ product.price }}">
+    
+        <label for="description">Опис:</label>
+        <textarea id="description" name="description">{{ product.description|safe }}</textarea>
+    
+        <label for="brand">Бренд:</label>
+        <input type="text" id="brand" name="brand" value="{{ product.brand }}">
+    
+        <label for="category">Категорія:</label>
+        <select id="category" name="category">
+            {% for category in categories %}
+                <option value="{{ category.name }}" {% if product.category.name == category.name %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
+            {% endfor %}
+        </select>
+        
+        <a href="{% url 'products:edit' product.id %}">
+            <button type="submit">Зберегти</button>
+        </a>
+    </form>
+{% endblock %}
+
+{% block products %}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

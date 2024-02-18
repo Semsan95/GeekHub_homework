@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Видалити продукт</h1>
+  <p>Ви впевнені, що хочете видалити продукт "{{ product.name }}"?</p>
+  <form method="post", action="{% url 'products:delete' product.id %}">
+    {% csrf_token %}
+    <button type="submit">Так, видалити</button>
+  </form>
+  <a href="{% url 'products:details' product.id %}">Ні, повернутися назад</a>
+{% endblock %}
+{% block login %}
+{% endblock %}
